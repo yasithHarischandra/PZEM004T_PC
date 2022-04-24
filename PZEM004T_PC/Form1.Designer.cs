@@ -29,13 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.comboBoxBaudRate = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.buttonRefreshPorts = new System.Windows.Forms.Button();
             this.comboBoxComPorts = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonConnect = new System.Windows.Forms.Button();
-            this.testCom = new System.Windows.Forms.Button();
             this.voltageUnits = new System.Windows.Forms.Label();
             this.timerRefreshSensorReading = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
@@ -47,25 +44,8 @@
             this.CurrentUnits = new System.Windows.Forms.Label();
             this.PowerfactorDisplay = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // comboBoxBaudRate
-            // 
-            this.comboBoxBaudRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBaudRate.FormattingEnabled = true;
-            this.comboBoxBaudRate.Location = new System.Drawing.Point(135, 48);
-            this.comboBoxBaudRate.Name = "comboBoxBaudRate";
-            this.comboBoxBaudRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBaudRate.TabIndex = 10;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 56);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Select baud rate";
             // 
             // buttonRefreshPorts
             // 
@@ -104,22 +84,12 @@
             this.buttonConnect.UseVisualStyleBackColor = true;
             this.buttonConnect.Click += new System.EventHandler(this.button1_Click);
             // 
-            // testCom
-            // 
-            this.testCom.Location = new System.Drawing.Point(473, 13);
-            this.testCom.Name = "testCom";
-            this.testCom.Size = new System.Drawing.Size(75, 23);
-            this.testCom.TabIndex = 12;
-            this.testCom.Text = "Test";
-            this.testCom.UseVisualStyleBackColor = true;
-            this.testCom.Click += new System.EventHandler(this.testCom_Click);
-            // 
             // voltageUnits
             // 
             this.voltageUnits.AutoSize = true;
             this.voltageUnits.BackColor = System.Drawing.SystemColors.Control;
             this.voltageUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.voltageUnits.Location = new System.Drawing.Point(89, 92);
+            this.voltageUnits.Location = new System.Drawing.Point(99, 73);
             this.voltageUnits.Name = "voltageUnits";
             this.voltageUnits.Size = new System.Drawing.Size(26, 25);
             this.voltageUnits.TabIndex = 14;
@@ -127,7 +97,7 @@
             // 
             // timerRefreshSensorReading
             // 
-            this.timerRefreshSensorReading.Interval = 300;
+            this.timerRefreshSensorReading.Interval = 800;
             this.timerRefreshSensorReading.Tick += new System.EventHandler(this.timerRefreshSensorReading_Tick);
             // 
             // label3
@@ -135,7 +105,7 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.SystemColors.Control;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(186, 92);
+            this.label3.Location = new System.Drawing.Point(196, 73);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 25);
             this.label3.TabIndex = 16;
@@ -145,7 +115,7 @@
             // 
             this.VoltageDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.VoltageDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VoltageDisplay.Location = new System.Drawing.Point(18, 89);
+            this.VoltageDisplay.Location = new System.Drawing.Point(28, 70);
             this.VoltageDisplay.Name = "VoltageDisplay";
             this.VoltageDisplay.ReadOnly = true;
             this.VoltageDisplay.Size = new System.Drawing.Size(71, 31);
@@ -157,7 +127,7 @@
             // 
             this.FreqDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.FreqDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FreqDisplay.Location = new System.Drawing.Point(129, 89);
+            this.FreqDisplay.Location = new System.Drawing.Point(139, 70);
             this.FreqDisplay.Name = "FreqDisplay";
             this.FreqDisplay.ReadOnly = true;
             this.FreqDisplay.Size = new System.Drawing.Size(58, 31);
@@ -169,7 +139,7 @@
             // 
             this.PowerDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.PowerDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerDisplay.Location = new System.Drawing.Point(129, 152);
+            this.PowerDisplay.Location = new System.Drawing.Point(139, 133);
             this.PowerDisplay.Name = "PowerDisplay";
             this.PowerDisplay.ReadOnly = true;
             this.PowerDisplay.Size = new System.Drawing.Size(73, 31);
@@ -181,7 +151,7 @@
             // 
             this.CurrentDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.CurrentDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentDisplay.Location = new System.Drawing.Point(18, 152);
+            this.CurrentDisplay.Location = new System.Drawing.Point(28, 133);
             this.CurrentDisplay.Name = "CurrentDisplay";
             this.CurrentDisplay.ReadOnly = true;
             this.CurrentDisplay.Size = new System.Drawing.Size(71, 31);
@@ -194,7 +164,7 @@
             this.PowerUnits.AutoSize = true;
             this.PowerUnits.BackColor = System.Drawing.SystemColors.Control;
             this.PowerUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerUnits.Location = new System.Drawing.Point(201, 155);
+            this.PowerUnits.Location = new System.Drawing.Point(211, 136);
             this.PowerUnits.Name = "PowerUnits";
             this.PowerUnits.Size = new System.Drawing.Size(32, 25);
             this.PowerUnits.TabIndex = 20;
@@ -205,7 +175,7 @@
             this.CurrentUnits.AutoSize = true;
             this.CurrentUnits.BackColor = System.Drawing.SystemColors.Control;
             this.CurrentUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentUnits.Location = new System.Drawing.Point(89, 155);
+            this.CurrentUnits.Location = new System.Drawing.Point(99, 136);
             this.CurrentUnits.Name = "CurrentUnits";
             this.CurrentUnits.Size = new System.Drawing.Size(26, 25);
             this.CurrentUnits.TabIndex = 19;
@@ -215,7 +185,7 @@
             // 
             this.PowerfactorDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.PowerfactorDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerfactorDisplay.Location = new System.Drawing.Point(246, 152);
+            this.PowerfactorDisplay.Location = new System.Drawing.Point(256, 133);
             this.PowerfactorDisplay.Name = "PowerfactorDisplay";
             this.PowerfactorDisplay.ReadOnly = true;
             this.PowerfactorDisplay.Size = new System.Drawing.Size(58, 31);
@@ -228,17 +198,28 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.SystemColors.Control;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(303, 155);
+            this.label4.Location = new System.Drawing.Point(313, 136);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(39, 25);
             this.label4.TabIndex = 23;
             this.label4.Text = "PF";
             // 
+            // buttonSettings
+            // 
+            this.buttonSettings.Location = new System.Drawing.Point(15, 220);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(75, 23);
+            this.buttonSettings.TabIndex = 25;
+            this.buttonSettings.Text = "Settings";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(609, 450);
+            this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.PowerfactorDisplay);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.PowerDisplay);
@@ -249,10 +230,7 @@
             this.Controls.Add(this.VoltageDisplay);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.voltageUnits);
-            this.Controls.Add(this.testCom);
             this.Controls.Add(this.buttonConnect);
-            this.Controls.Add(this.comboBoxBaudRate);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.buttonRefreshPorts);
             this.Controls.Add(this.comboBoxComPorts);
             this.Controls.Add(this.label1);
@@ -265,16 +243,11 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox comboBoxBaudRate;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonRefreshPorts;
         private System.Windows.Forms.ComboBox comboBoxComPorts;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonConnect;
-        private System.Windows.Forms.Button testCom;
         protected System.Windows.Forms.Label voltageUnits;
-        private System.Windows.Forms.Timer timerRefreshSensorReading;
         protected System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox VoltageDisplay;
         private System.Windows.Forms.TextBox FreqDisplay;
@@ -284,6 +257,7 @@
         protected System.Windows.Forms.Label CurrentUnits;
         private System.Windows.Forms.TextBox PowerfactorDisplay;
         protected System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonSettings;
     }
 }
 

@@ -9,7 +9,6 @@ namespace PZEM004T_PC
 {
     internal class Modbus
     {
-        SerialPort _serialPort;
         public static bool isSerialPortOpen = false;
 
         public static byte[] GetCommandReadInputRegisters(int slaveAddress, int startRegister, int numRegisters)

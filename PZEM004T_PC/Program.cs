@@ -44,6 +44,7 @@ namespace PZEM004T_PC
             _serialPort.DataBits = 8;
             _serialPort.StopBits = StopBits.One;
             _serialPort.Handshake = Handshake.None;
+            _serialPort.ReadTimeout = 100;
             if (_serialPort.IsOpen)
             {
                 error = "Port is already open.";

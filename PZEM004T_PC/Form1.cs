@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 
 namespace PZEM004T_PC
@@ -14,6 +15,7 @@ namespace PZEM004T_PC
     public partial class Form1 : Form
     {
         PZEM_004T_v3 energyMeter;
+        public System.Windows.Forms.Timer timerRefreshSensorReading;
         public Form1()
         {
             InitializeComponent();
@@ -27,11 +29,6 @@ namespace PZEM004T_PC
             comboBoxComPorts.Items.AddRange(ports);
             comboBoxComPorts.SelectedIndex = 0;
 
-            //Baud rate
-            string[] baudRates = { "9600", "115200" };
-            comboBoxBaudRate.Items.Clear();
-            comboBoxBaudRate.Items.AddRange(baudRates);
-            comboBoxBaudRate.SelectedIndex = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -39,7 +36,7 @@ namespace PZEM004T_PC
             string error = "";
             if (!Program.isSerialPortOpen)
             {
-                if (Program.OpenSerialPort(comboBoxComPorts.Text, comboBoxBaudRate.Text, ref error))
+                if (Program.OpenSerialPort(comboBoxComPorts.Text, "9600", ref error))
                 {
                     //MessageBox.Show("Port opened successfully");
                     buttonConnect.Text = "Disconnect";
@@ -66,27 +63,37 @@ namespace PZEM004T_PC
             
         }
 
-        private void testCom_Click(object sender, EventArgs e)
+        private void readSensor()
         {
-            string error = "";
-            //com with sensor
-            Modbus modbusObject = new Modbus();
-            List<UInt16> registers = Modbus.ReadInputRegisters(ref Program._serialPort, 1, 0, 2, ref error);
-            if(!energyMeter.RefreshAllReadings())
-                MessageBox.Show(error);
-            VoltageDisplay.Text = energyMeter.readings.GetVoltage().ToString();
+            //string error = "";
+            //if (!energyMeter.RefreshAllReadings())
+            //    MessageBox.Show(error);
+            energyMeter.RefreshAllReadings();
+
+
         }
 
         private void timerRefreshSensorReading_Tick(object sender, EventArgs e)
         {
-            string error = "";
-            if (!energyMeter.RefreshAllReadings())
-                MessageBox.Show(error);
+            // Create a thread and call a background method   
+            Thread backgroundThread = new Thread(new ThreadStart(readSensor));
+            // Start thread  
+            backgroundThread.Start();
+            if (energyMeter == null)
+                return;
+
             VoltageDisplay.Text = energyMeter.readings.GetVoltage().ToString();
             FreqDisplay.Text = energyMeter.readings.GetFrequency().ToString();
             CurrentDisplay.Text = energyMeter.readings.GetCurrent().ToString();
             PowerDisplay.Text = energyMeter.readings.GetPower().ToString();
             PowerfactorDisplay.Text = energyMeter.readings.GetPowerFactor().ToString();
+        }
+
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            Settings newSettingsWindow = new Settings();
+            timerRefreshSensorReading.Stop();
+            newSettingsWindow.Show();
         }
     }
 }

@@ -48,9 +48,10 @@ namespace PZEM004T_PC
         public bool RefreshAllReadings()
         {
             string error = "";
-            List<UInt16> registers = Modbus.ReadInputRegisters(ref Program._serialPort, 1, 0, 10, ref error);
+            const int numRegistersToRead = 10;
+            List<UInt16> registers = Modbus.ReadInputRegisters(ref Program._serialPort, 1, 0, numRegistersToRead, ref error);
 
-            if (registers != null)
+            if (registers != null && registers.Count == numRegistersToRead)
             {
                 readings.SetVoltage(registers[0] / 10.0);
 
