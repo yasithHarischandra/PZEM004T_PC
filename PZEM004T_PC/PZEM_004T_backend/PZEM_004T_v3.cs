@@ -34,10 +34,12 @@ namespace PZEM004T_PC
         public void SetStatusOverloadAlarm(bool alarm ) { this.overloadAlarm = alarm;}
 
     }
-    internal class PZEM_004T_v3
+    public class PZEM_004T_v3
     {
         public PZEM004T_PARAMS readings;
-        public static SerialPort _serialPort;
+        static SerialPort _serialPort;
+        public int powerAlarmThreshold = 0;
+        byte slaveAddress = 0x01;
 
         public PZEM_004T_v3(ref SerialPort sp)
         {
@@ -47,9 +49,12 @@ namespace PZEM004T_PC
 
         public bool RefreshAllReadings()
         {
+            if (!_serialPort.IsOpen)
+                return false;
+
             string error = "";
-            const int numRegistersToRead = 10;
-            List<UInt16> registers = Modbus.ReadInputRegisters(ref Program._serialPort, 1, 0, numRegistersToRead, ref error);
+            const UInt16 numRegistersToRead = 10;
+            List<UInt16> registers = Modbus.ReadInputRegisters(ref _serialPort, slaveAddress, 0, numRegistersToRead, ref error);
 
             if (registers != null && registers.Count == numRegistersToRead)
             {
@@ -79,6 +84,42 @@ namespace PZEM004T_PC
                 return false;
             }
             return true;
+        }
+
+        public bool ReadPowerAlarmThreshold(ref string error)
+        {
+            if (!_serialPort.IsOpen)
+                return false;
+
+            List<UInt16> intPowerTrigger = Modbus.ReadHoldingRegisters(ref _serialPort, slaveAddress, 0, 2, ref error);
+
+            if (intPowerTrigger != null && intPowerTrigger.Count > 0)
+            {
+                powerAlarmThreshold = intPowerTrigger[1];
+            }
+            else
+                return false;
+
+            return true;
+        }
+
+        public bool SetPowerAlarmThreshold(UInt16 thresholdVal, ref string error)
+        {
+            if (!_serialPort.IsOpen)
+                return false;
+
+           bool success = Modbus.WriteSingleRegister(ref _serialPort, slaveAddress, 1, thresholdVal,ref error);
+            return success;
+        }
+
+        public void SetSlaveAddress(byte address)
+        {
+            slaveAddress = address;
+        }
+
+        public void SetSerialPort(SerialPort port)
+        {
+            _serialPort = port;
         }
     }
 }

@@ -45,6 +45,8 @@
             this.PowerfactorDisplay = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonSettings = new System.Windows.Forms.Button();
+            this.labelOverloadAlarm = new System.Windows.Forms.Label();
+            this.OverloadAlarmDisplay = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonRefreshPorts
@@ -139,7 +141,7 @@
             // 
             this.PowerDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.PowerDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerDisplay.Location = new System.Drawing.Point(139, 133);
+            this.PowerDisplay.Location = new System.Drawing.Point(139, 122);
             this.PowerDisplay.Name = "PowerDisplay";
             this.PowerDisplay.ReadOnly = true;
             this.PowerDisplay.Size = new System.Drawing.Size(73, 31);
@@ -151,7 +153,7 @@
             // 
             this.CurrentDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.CurrentDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentDisplay.Location = new System.Drawing.Point(28, 133);
+            this.CurrentDisplay.Location = new System.Drawing.Point(28, 122);
             this.CurrentDisplay.Name = "CurrentDisplay";
             this.CurrentDisplay.ReadOnly = true;
             this.CurrentDisplay.Size = new System.Drawing.Size(71, 31);
@@ -164,7 +166,7 @@
             this.PowerUnits.AutoSize = true;
             this.PowerUnits.BackColor = System.Drawing.SystemColors.Control;
             this.PowerUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerUnits.Location = new System.Drawing.Point(211, 136);
+            this.PowerUnits.Location = new System.Drawing.Point(211, 125);
             this.PowerUnits.Name = "PowerUnits";
             this.PowerUnits.Size = new System.Drawing.Size(32, 25);
             this.PowerUnits.TabIndex = 20;
@@ -175,7 +177,7 @@
             this.CurrentUnits.AutoSize = true;
             this.CurrentUnits.BackColor = System.Drawing.SystemColors.Control;
             this.CurrentUnits.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentUnits.Location = new System.Drawing.Point(99, 136);
+            this.CurrentUnits.Location = new System.Drawing.Point(99, 125);
             this.CurrentUnits.Name = "CurrentUnits";
             this.CurrentUnits.Size = new System.Drawing.Size(26, 25);
             this.CurrentUnits.TabIndex = 19;
@@ -185,7 +187,7 @@
             // 
             this.PowerfactorDisplay.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.PowerfactorDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PowerfactorDisplay.Location = new System.Drawing.Point(256, 133);
+            this.PowerfactorDisplay.Location = new System.Drawing.Point(256, 122);
             this.PowerfactorDisplay.Name = "PowerfactorDisplay";
             this.PowerfactorDisplay.ReadOnly = true;
             this.PowerfactorDisplay.Size = new System.Drawing.Size(58, 31);
@@ -198,7 +200,7 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.SystemColors.Control;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(313, 136);
+            this.label4.Location = new System.Drawing.Point(313, 125);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(39, 25);
             this.label4.TabIndex = 23;
@@ -214,11 +216,33 @@
             this.buttonSettings.UseVisualStyleBackColor = true;
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
+            // labelOverloadAlarm
+            // 
+            this.labelOverloadAlarm.AutoSize = true;
+            this.labelOverloadAlarm.Location = new System.Drawing.Point(15, 185);
+            this.labelOverloadAlarm.Name = "labelOverloadAlarm";
+            this.labelOverloadAlarm.Size = new System.Drawing.Size(110, 13);
+            this.labelOverloadAlarm.TabIndex = 26;
+            this.labelOverloadAlarm.Text = "Power overload Alarm";
+            // 
+            // OverloadAlarmDisplay
+            // 
+            this.OverloadAlarmDisplay.BackColor = System.Drawing.Color.Green;
+            this.OverloadAlarmDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OverloadAlarmDisplay.Location = new System.Drawing.Point(139, 173);
+            this.OverloadAlarmDisplay.Name = "OverloadAlarmDisplay";
+            this.OverloadAlarmDisplay.ReadOnly = true;
+            this.OverloadAlarmDisplay.Size = new System.Drawing.Size(73, 31);
+            this.OverloadAlarmDisplay.TabIndex = 27;
+            this.OverloadAlarmDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(609, 450);
+            this.Controls.Add(this.OverloadAlarmDisplay);
+            this.Controls.Add(this.labelOverloadAlarm);
             this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.PowerfactorDisplay);
             this.Controls.Add(this.label4);
@@ -258,6 +282,8 @@
         private System.Windows.Forms.TextBox PowerfactorDisplay;
         protected System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonSettings;
+        private System.Windows.Forms.Label labelOverloadAlarm;
+        private System.Windows.Forms.TextBox OverloadAlarmDisplay;
     }
 }
 

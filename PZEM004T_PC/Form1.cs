@@ -14,7 +14,7 @@ namespace PZEM004T_PC
 {
     public partial class Form1 : Form
     {
-        PZEM_004T_v3 energyMeter;
+        public PZEM_004T_v3 energyMeter;
         public System.Windows.Forms.Timer timerRefreshSensorReading;
         public Form1()
         {
@@ -42,13 +42,22 @@ namespace PZEM004T_PC
                     buttonConnect.Text = "Disconnect";
                     Program.isSerialPortOpen = true;
                     energyMeter = new PZEM_004T_v3(ref Program._serialPort);
+
+                    Cursor.Current = Cursors.WaitCursor;
+                    if (!energyMeter.ReadPowerAlarmThreshold(ref error))
+                        MessageBox.Show("Error reading power overload alarm threshold from sensor!\n" + error);
+
                     timerRefreshSensorReading.Start();
+                    Cursor.Current = Cursors.Default;
                 }
                 else
                     MessageBox.Show(error);
             }
             else
             {
+                timerRefreshSensorReading.Stop();
+                Cursor.Current = Cursors.WaitCursor;
+                Thread.Sleep(timerRefreshSensorReading.Interval + 1000);    //wait until auto sensor refresh is done
                 if (Program.CloseSerialPort(ref error))
                 {
                     buttonConnect.Text = "Connect";
@@ -57,7 +66,9 @@ namespace PZEM004T_PC
                 else
                     MessageBox.Show(error);
 
-                timerRefreshSensorReading.Stop();
+                Cursor.Current = Cursors.Default;
+                if (Program.isSerialPortOpen)
+                    timerRefreshSensorReading.Start();
             }
 
             
@@ -68,7 +79,8 @@ namespace PZEM004T_PC
             //string error = "";
             //if (!energyMeter.RefreshAllReadings())
             //    MessageBox.Show(error);
-            energyMeter.RefreshAllReadings();
+            if(Program.isSerialPortOpen)
+                energyMeter.RefreshAllReadings();
 
 
         }
@@ -87,6 +99,10 @@ namespace PZEM004T_PC
             CurrentDisplay.Text = energyMeter.readings.GetCurrent().ToString();
             PowerDisplay.Text = energyMeter.readings.GetPower().ToString();
             PowerfactorDisplay.Text = energyMeter.readings.GetPowerFactor().ToString();
+            if(energyMeter.readings.GetStatusOverloadAlarm())
+                OverloadAlarmDisplay.BackColor = Color.Red;
+            else 
+                OverloadAlarmDisplay.BackColor = Color.Green;
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)

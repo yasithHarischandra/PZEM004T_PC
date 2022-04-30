@@ -10,8 +10,37 @@ namespace PZEM004T_PC
     internal class Modbus
     {
         public static bool isSerialPortOpen = false;
+        public int retryDelay = 500;
 
-        public static byte[] GetCommandReadInputRegisters(int slaveAddress, int startRegister, int numRegisters)
+        //Modbus command - 03
+        public static byte[] GetCommandReadHoldingRegisters(byte slaveAddress, UInt16 startRegister, UInt16 numRegisters)
+        {
+            byte[] ModbusCommand = new byte[6];
+
+            ModbusCommand[0] = (byte)slaveAddress;
+            ModbusCommand[1] = 03;  //function
+
+            //start register
+            ModbusCommand[2] = (byte)((startRegister >> 8) & 0xFF); //High byte
+            ModbusCommand[3] = (byte)(startRegister & 0xFF);        //low byte
+
+            //number of registers to read
+            ModbusCommand[4] = (byte)((numRegisters >> 8) & 0xFF); //High byte
+            ModbusCommand[5] = (byte)(numRegisters & 0xFF);        //low byte
+
+            //Add CRC bytes
+            byte[] crcBytes = new byte[2];
+            UInt16 crc = ComputeCRC(ModbusCommand, ref crcBytes);
+            Array.Resize(ref ModbusCommand, ModbusCommand.Length + 2);
+            ModbusCommand[6] = crcBytes[0];         //low byte
+            ModbusCommand[7] = crcBytes[1];        //high byte
+
+
+            return ModbusCommand;
+        }
+
+        //Modbus command - 04
+        public static byte[] GetCommandReadInputRegisters(byte slaveAddress, UInt16 startRegister, UInt16 numRegisters)
         {
             byte[] ModbusCommand = new byte[6];
 
@@ -37,45 +66,144 @@ namespace PZEM004T_PC
             return ModbusCommand;
         }
 
-        public static bool ProcessResponse(ref byte[] response,ref List<UInt16> result, ref string error)
+        //Modbus command - 06
+        public static byte[] GetCommandWriteSingleRegister(byte slaveAddress, UInt16 registerAddress, UInt16 value)
         {
-            //List<UInt16> result = new List<UInt16>();
+            byte[] ModbusCommand = new byte[6];
+
+            ModbusCommand[0] = (byte)slaveAddress;
+            ModbusCommand[1] = 06;  //function
+
+            //start register
+            ModbusCommand[2] = (byte)((registerAddress >> 8) & 0xFF); //High byte
+            ModbusCommand[3] = (byte)(registerAddress & 0xFF);        //low byte
+
+            //number of registers to read
+            ModbusCommand[4] = (byte)((value >> 8) & 0xFF); //High byte
+            ModbusCommand[5] = (byte)(value & 0xFF);        //low byte
+
+            //Add CRC bytes
+            byte[] crcBytes = new byte[2];
+            UInt16 crc = ComputeCRC(ModbusCommand, ref crcBytes);
+            Array.Resize(ref ModbusCommand, ModbusCommand.Length + 2);
+            ModbusCommand[6] = crcBytes[0];         //low byte
+            ModbusCommand[7] = crcBytes[1];        //high byte
+
+
+            return ModbusCommand;
+        }
+
+        public static bool ProcessResponse(ref byte function, ref byte[] response,ref List<UInt16> result, ref string error)
+        {
+           if(function != response[1])
+            {
+                error = "Function code does not match in response.";
+                return false;
+            }
 
             switch(response[1])
             {
-                case 4:
-                    int numBytesToRead = response[2];
-                    for(int i = 0; i < numBytesToRead; i+=2)
+                case 3:
                     {
-                        UInt16 highByte = (UInt16)response[i + 3];
-                        UInt16 lowByte = (UInt16)response[i + 4];
-                        highByte = (UInt16)(highByte << 8);
-                        UInt16 registerval = (UInt16)(highByte | lowByte);
-                        result.Add(registerval);
+                        int numBytesToRead = response[2];
+                        for (int i = 0; i < numBytesToRead; i += 2)
+                        {
+                            UInt16 highByte = (UInt16)response[i + 3];
+                            UInt16 lowByte = (UInt16)response[i + 4];
+                            highByte = (UInt16)(highByte << 8);
+                            UInt16 registerval = (UInt16)(highByte | lowByte);
+                            result.Add(registerval);
+                        }
+                        break;
                     }
+                case 4:
+                    {
+                        int numBytesToRead = response[2];
+                        for (int i = 0; i < numBytesToRead; i += 2)
+                        {
+                            UInt16 highByte = (UInt16)response[i + 3];
+                            UInt16 lowByte = (UInt16)response[i + 4];
+                            highByte = (UInt16)(highByte << 8);
+                            UInt16 registerval = (UInt16)(highByte | lowByte);
+                            result.Add(registerval);
+                        }
+                        break;
+                    }
+                case 6:
+                    result.Clear();
                     break;
+                default:
+                    return false;
+                    
             }
                 
 
             return true;
         }
 
-        public static List<UInt16> ReadInputRegisters(ref SerialPort _serialPort, int slaveAddress, int startRegister, int numRegisters, ref string error)
+        public static bool SendReceive(ref SerialPort _serialPort, ref byte[] modbusCommand,int responseLength,ref List<UInt16> registers, ref string error)
+        {
+            byte[] response = new byte[responseLength];
+
+            bool sendSuccess = sendModbusCommand(ref _serialPort, ref modbusCommand, responseLength, ref response, ref error);
+            bool responseSuccess = ProcessResponse(ref modbusCommand[1], ref response, ref registers, ref error);
+
+            int count = 0;
+            while (!sendSuccess || !responseSuccess)
+            {
+                if (count > 2)
+                {
+                    return false;
+                }
+                sendSuccess = sendModbusCommand(ref _serialPort, ref modbusCommand, responseLength, ref response, ref error);
+                responseSuccess = ProcessResponse(ref modbusCommand[1], ref response, ref registers, ref error);
+                count++;
+            }
+
+            return true;
+        }
+
+        //Modbus command - 03
+        public static List<UInt16> ReadHoldingRegisters(ref SerialPort _serialPort, byte slaveAddress, UInt16 startRegister, UInt16 numRegisters, ref string error)
+        {
+            List<UInt16> registers = new List<UInt16>();
+            int responseLength = 5 + 2 * numRegisters;
+            
+
+            byte[] modbusCommand = GetCommandReadHoldingRegisters(slaveAddress, startRegister, numRegisters);
+
+            SendReceive(ref _serialPort, ref modbusCommand, responseLength,ref registers, ref error);
+
+            return registers;
+        }
+
+        //Modbus command - 04
+        public static List<UInt16> ReadInputRegisters(ref SerialPort _serialPort, byte slaveAddress, UInt16 startRegister, UInt16 numRegisters, ref string error)
         {
             List<UInt16> registers = new List<UInt16>();
             int responseLength = 5 + 2 * numRegisters;
             byte[] response = new byte[responseLength];
 
             byte[] modbusCommand = GetCommandReadInputRegisters(slaveAddress, startRegister, numRegisters);
-            
-            bool sendSuccess = sendModbusCommand(ref _serialPort, ref modbusCommand, responseLength, ref response, ref error);
-            
-            bool responseSuccess = ProcessResponse(ref response, ref registers, ref error);
+
+            SendReceive(ref _serialPort, ref modbusCommand, responseLength, ref registers, ref error);
 
             return registers;
         }
 
-        
+        //Modbus command - 06
+        public static bool WriteSingleRegister(ref SerialPort _serialPort, byte slaveAddress, UInt16 registerAddress, UInt16 value, ref string error)
+        {
+            List<UInt16> registers = new List<UInt16>();
+            int responseLength = 8;     //Fixed - echo of command
+            byte[] response = new byte[responseLength];
+
+            byte[] modbusCommand = GetCommandWriteSingleRegister(slaveAddress, registerAddress, value);
+
+            bool success = SendReceive(ref _serialPort, ref modbusCommand, responseLength, ref registers, ref error);
+
+            return success;
+        }
 
         private static void GetResponse(ref SerialPort _serialPort, ref byte[] response)
         {
@@ -90,19 +218,46 @@ namespace PZEM004T_PC
 
         private static bool sendModbusCommand(ref SerialPort _serialPort, ref byte[] command, int responseLength, ref byte[] response, ref string error)
         {
+            if(!_serialPort.IsOpen)
+            {
+                error = "Serial port is closed.";
+                return false;
+            }
             _serialPort.DiscardOutBuffer();
             _serialPort.DiscardInBuffer();
 
             try
             {
                 _serialPort.Write(command, 0, command.Length);
-                System.Threading.Thread.Sleep(2000);
-                _serialPort.Read(response, 0, response.Length);
+            }
+            catch (Exception ex)
+            {
+                error = "Error sending MODBUS command to device! \n" + ex.Message;
+                return false;
+            }
+
+            try
+            {
+                //System.Threading.Thread.Sleep(2000);
+                // _serialPort.Read(response, 0, response.Length);
+                _serialPort.ReadTimeout = 4000;
+                for(int i = 0;i < responseLength;i++)
+                {
+                    int val = _serialPort.ReadByte();
+                    if (val >= 0)
+                        response[i] = (byte)val;
+                    else
+                        break;
+                   
+                    if( i==0)
+                        _serialPort.ReadTimeout = 50;
+                }
+                
                 //GetResponse(ref _serialPort, ref response);
             }
             catch (Exception ex)
             {
-                error = "Failed to close serial port!.";
+                error = "Error reading response from device! \n" + ex.Message;
                 return false;
             }
 
