@@ -47,11 +47,13 @@
             this.buttonSettings = new System.Windows.Forms.Button();
             this.labelOverloadAlarm = new System.Windows.Forms.Label();
             this.OverloadAlarmDisplay = new System.Windows.Forms.TextBox();
+            this.plotView1 = new OxyPlot.WindowsForms.PlotView();
+            this.comboBoxSelectPlotVariable = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // buttonRefreshPorts
             // 
-            this.buttonRefreshPorts.Location = new System.Drawing.Point(281, 12);
+            this.buttonRefreshPorts.Location = new System.Drawing.Point(246, 15);
             this.buttonRefreshPorts.Name = "buttonRefreshPorts";
             this.buttonRefreshPorts.Size = new System.Drawing.Size(75, 23);
             this.buttonRefreshPorts.TabIndex = 8;
@@ -62,7 +64,7 @@
             // 
             this.comboBoxComPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxComPorts.FormattingEnabled = true;
-            this.comboBoxComPorts.Location = new System.Drawing.Point(135, 12);
+            this.comboBoxComPorts.Location = new System.Drawing.Point(109, 16);
             this.comboBoxComPorts.Name = "comboBoxComPorts";
             this.comboBoxComPorts.Size = new System.Drawing.Size(121, 21);
             this.comboBoxComPorts.TabIndex = 7;
@@ -78,7 +80,7 @@
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Location = new System.Drawing.Point(373, 12);
+            this.buttonConnect.Location = new System.Drawing.Point(337, 15);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(75, 23);
             this.buttonConnect.TabIndex = 11;
@@ -208,7 +210,7 @@
             // 
             // buttonSettings
             // 
-            this.buttonSettings.Location = new System.Drawing.Point(15, 220);
+            this.buttonSettings.Location = new System.Drawing.Point(428, 15);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSettings.TabIndex = 25;
@@ -236,11 +238,41 @@
             this.OverloadAlarmDisplay.TabIndex = 27;
             this.OverloadAlarmDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // plotView1
+            // 
+            this.plotView1.Location = new System.Drawing.Point(28, 222);
+            this.plotView1.Name = "plotView1";
+            this.plotView1.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.plotView1.Size = new System.Drawing.Size(596, 254);
+            this.plotView1.TabIndex = 28;
+            this.plotView1.Text = "plotView1";
+            this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            // 
+            // comboBoxSelectPlotVariable
+            // 
+            this.comboBoxSelectPlotVariable.FormattingEnabled = true;
+            this.comboBoxSelectPlotVariable.Items.AddRange(new object[] {
+            "Voltage",
+            "Current",
+            "Power",
+            "Frequency",
+            "Power Factor"});
+            this.comboBoxSelectPlotVariable.Location = new System.Drawing.Point(18, 222);
+            this.comboBoxSelectPlotVariable.Name = "comboBoxSelectPlotVariable";
+            this.comboBoxSelectPlotVariable.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxSelectPlotVariable.TabIndex = 29;
+            this.comboBoxSelectPlotVariable.Text = "Voltage";
+            this.comboBoxSelectPlotVariable.SelectedIndexChanged += new System.EventHandler(this.comboBoxSelectPlotVariable_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(609, 450);
+            this.ClientSize = new System.Drawing.Size(662, 558);
+            this.Controls.Add(this.comboBoxSelectPlotVariable);
+            this.Controls.Add(this.plotView1);
             this.Controls.Add(this.OverloadAlarmDisplay);
             this.Controls.Add(this.labelOverloadAlarm);
             this.Controls.Add(this.buttonSettings);
@@ -284,6 +316,8 @@
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.Label labelOverloadAlarm;
         private System.Windows.Forms.TextBox OverloadAlarmDisplay;
+        private OxyPlot.WindowsForms.PlotView plotView1;
+        private System.Windows.Forms.ComboBox comboBoxSelectPlotVariable;
     }
 }
 
